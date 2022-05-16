@@ -9,3 +9,8 @@
 ```
 pip install git+https://gitlab.gfdl.noaa.gov/Seth.Underwood/wiki2man
 ```
+
+## Known Issues
+
+* The MediaWiki to man conversion does not handle tables correctly
+

@@ -1,4 +1,5 @@
 import subprocess
+import sys
 from .connect import Connect
 
 class WikiPage:
