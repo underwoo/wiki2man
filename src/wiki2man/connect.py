@@ -33,6 +33,7 @@ class Connect:
         except Exception as err:
             print(f"Error opening session to {url}: {err}", file=sys.stderr)
 
+
     def get_wiki_page(self, page_title):
         params_parse_page = {
             'action':"parse",
@@ -53,10 +54,35 @@ class Connect:
             # Get the date of the last revision
             wikipage['date'] = self.get_page_revision_date(wikipage['pageid'],
                                                            wikipage['revid'])
+            # Expand all Wiki templates
+            wikipage['wikitext'] = self.expand_templates(wikipage)
             return wikipage
         except Exception as err:
             print(err, file=sys.stderr)
             return None
+
+
+    def expand_templates(self, wikipage):
+        print(wikipage)
+        params_expandtemplates = {
+            'action': "expandtemplates",
+            'format': "json",
+            'title': wikipage['title'],
+            'text': wikipage['wikitext'],
+            'revid': wikipage['revid'],
+            'prop': "wikitext",
+        }
+        try:
+            ret = self.session.get(self.url, params=params_expandtemplates)
+            ret_json = ret.json()
+            ret_wikitext = ret_json['expandtemplates']['wikitext']
+            # Some pages may have __NOTOC__ to not create the Table of Contents
+            # Remove that string from the wikitext.
+            return str.encode(ret_wikitext.replace('__NOTOC__', ''))
+        except Exception as err:
+            print(err, file=sys.stderr)
+            return None
+
 
     def get_page_revision_date(self, pageid, revid):
         params_revision = {

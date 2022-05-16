@@ -26,7 +26,6 @@ def get_args():
 
 def main():
     args = get_args()
-    print(args)
     wiki = WikiPage(args.url,
                     args.username,
                     args.password,
