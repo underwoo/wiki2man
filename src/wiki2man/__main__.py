@@ -1,21 +1,40 @@
 from .wikipage import WikiPage
 import sys
+import argparse
+
+def get_args():
+    parser = argparse.ArgumentParser(prog="wiki2man",
+                                     description="Extract wiki text from a MediaWiki Wiki, and create a man page.",
+                                     allow_abbrev=False)
+    parser.add_argument("--url",
+                        help="Wiki API URL")
+    parser.add_argument("--username",
+                        help="Wiki API username")
+    parser.add_argument("--password",
+                        help="Wiki API password")
+    parser.add_argument("--title",
+                        help="Title of man page (e.g. intro_gaea)")
+    parser.add_argument("--section",
+                        help="Man page section number",
+                        type=int,
+                        default=7)
+    parser.add_argument("--wiki-page",
+                        help="Wiki page to extract")
+    args = parser.parse_args()
+    return args
+
 
 def main():
-    # Items that will eventually reside in a config file, or to be included via
-    # CLI options
-    API_URL = 'https://gaeadocs.rdhpcs.noaa.gov/wiki/api.php' # API URL
-    login_name = 'bot_username' # MediaWiki bot username
-    login_passwd = 'bot_password' # MediaWiki bot password
-    man_page_name = 'man_page' # Filename of man page to output
-    man_section = "7" # Section number for output man page
-    wiki_title = 'Wiki Title' # Title of Wiki page    API_URL = 'https://gaeadocs.rdhpcs.noaa.gov/wiki/api.php'
-
-    wiki = WikiPage(API_URL, login_name, login_passwd, wiki_title)
-    man = wiki.convert2man(man_page_name, man_section)
+    args = get_args()
+    print(args)
+    wiki = WikiPage(args.url,
+                    args.username,
+                    args.password,
+                    args.wiki_page)
+    man = wiki.convert2man(args.title, args.section)
 
     try:
-        with open('.'.join([man_page_name, man_section]), "wb") as f:
+        with open(f"{args.title}.{args.section}", "wb") as f:
             f.write(man)
     except Exception as err:
         print(err, file=sys.stderr)
