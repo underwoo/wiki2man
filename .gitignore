@@ -1,0 +1,10 @@
+*.pyc
+*~
+
+# Man page extensions
+*.[1-9]
+
+# Python build files
+/build/
+*.egg-info
+__pycache__/
