@@ -2,10 +2,12 @@ from .wikipage import WikiPage
 import sys
 import argparse
 
+
 def get_args():
-    parser = argparse.ArgumentParser(prog="wiki2man",
-                                     description="Extract wiki text from a MediaWiki Wiki, and create a man page.",
-                                     allow_abbrev=False)
+    parser = argparse.ArgumentParser(
+        prog="wiki2man",
+        description="Extract wiki text from a MediaWiki Wiki, and create a man page.",
+        allow_abbrev=False)
     parser.add_argument("--url",
                         help="Wiki API URL")
     parser.add_argument("--username",
@@ -20,6 +22,8 @@ def get_args():
                         default=7)
     parser.add_argument("--wiki-page",
                         help="Wiki page to extract")
+    parser.add_argument("-t", "--type",
+                        help="Output type.")
     args = parser.parse_args()
     return args
 
@@ -30,11 +34,17 @@ def main():
                     args.username,
                     args.password,
                     args.wiki_page)
-    man = wiki.convert2man(args.title, args.section)
+
+    if args.type == "rst":
+        output = wiki.convert2rst(args.title)
+        fname = f"{args.title}.rst"
+    else:
+        output = wiki.convert2man(args.title, args.section)
+        fname = f"{args.title}.{args.section}"
 
     try:
-        with open(f"{args.title}.{args.section}", "wb") as f:
-            f.write(man)
+        with open(fname, "wb") as f:
+            f.write(output)
     except Exception as err:
         print(err, file=sys.stderr)
 

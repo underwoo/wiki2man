@@ -3,6 +3,7 @@ import json
 import sys
 from datetime import datetime
 
+
 class Connect:
     def __init__(self, url, username, passcode):
         PARAMS_TOKEN = {
@@ -24,7 +25,7 @@ class Connect:
                 'lgname': username,
                 'lgpassword': passcode,
                 'lgtoken': json_ret['query']['tokens']['logintoken'],
-                'format':"json",
+                'format': "json",
             }
             ret = self.session.post(url, data=PARAMS_LOGIN)
             json_ret = ret.json()
@@ -33,13 +34,12 @@ class Connect:
         except Exception as err:
             print(f"Error opening session to {url}: {err}", file=sys.stderr)
 
-
     def get_wiki_page(self, page_title):
         params_parse_page = {
-            'action':"parse",
+            'action': "parse",
             'page': page_title,
-            'prop':"wikitext|revid|displaytitle",
-            'format':"json",
+            'prop': "wikitext|revid|displaytitle",
+            'format': "json",
         }
         try:
             ret = self.session.get(self.url, params=params_parse_page)
@@ -61,9 +61,7 @@ class Connect:
             print(err, file=sys.stderr)
             return None
 
-
     def expand_templates(self, wikipage):
-        print(wikipage)
         params_expandtemplates = {
             'action': "expandtemplates",
             'format': "json",
@@ -83,14 +81,13 @@ class Connect:
             print(err, file=sys.stderr)
             return None
 
-
     def get_page_revision_date(self, pageid, revid):
         params_revision = {
-            'action':"query",
-            'prop':"revisions",
-            'revids':f"{revid}",
-            'rvprop':"timestamp",
-            'format':"json",
+            'action': "query",
+            'prop': "revisions",
+            'revids': f"{revid}",
+            'rvprop': "timestamp",
+            'format': "json",
         }
         try:
             ret = self.session.get(self.url, params=params_revision)
