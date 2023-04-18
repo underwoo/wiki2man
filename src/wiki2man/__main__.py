@@ -1,12 +1,14 @@
-from .wikipage import WikiPage
 import sys
 import argparse
+
+from .wikipage import WikiPage
 
 
 def get_args():
     parser = argparse.ArgumentParser(
         prog="wiki2man",
-        description="Extract wiki text from a MediaWiki Wiki, and create a man page.",
+        description="Extract wiki text from a MediaWiki Wiki, "
+                    "and create a man page.",
         allow_abbrev=False)
     parser.add_argument("--url",
                         help="Wiki API URL")

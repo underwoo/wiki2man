@@ -36,7 +36,7 @@ class WikiPage:
         else:
             return sb_ret.stdout
 
-    def convert2rst(self, page_name):
+    def convert2rst(self):
         pandoc_cmd = [
             "pandoc",
             "-s",

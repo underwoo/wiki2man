@@ -5,6 +5,11 @@ from datetime import datetime
 
 
 class Connect:
+    """
+    Connect to a MediaWiki API, and extract the wiki text and page
+    modification date.
+    """
+
     def __init__(self, url, username, passcode):
         PARAMS_TOKEN = {
             'action': "query",
@@ -35,6 +40,7 @@ class Connect:
             print(f"Error opening session to {url}: {err}", file=sys.stderr)
 
     def get_wiki_page(self, page_title):
+        """Get the wiki page information in JSON format"""
         params_parse_page = {
             'action': "parse",
             'page': page_title,
@@ -62,6 +68,10 @@ class Connect:
             return None
 
     def expand_templates(self, wikipage):
+        """Expand all wiki page markup
+
+        This is needed if a wiki page is importing another wiki page.
+        """
         params_expandtemplates = {
             'action': "expandtemplates",
             'format': "json",
@@ -82,6 +92,9 @@ class Connect:
             return None
 
     def get_page_revision_date(self, pageid, revid):
+        """Get the last revision date
+
+        Returns a datetime object."""
         params_revision = {
             'action': "query",
             'prop': "revisions",
@@ -92,7 +105,8 @@ class Connect:
         try:
             ret = self.session.get(self.url, params=params_revision)
             ret_json = ret.json()
-            ret_date = ret_json['query']['pages'][pageid]['revisions'][0]['timestamp']
+            ret_date = \
+                ret_json['query']['pages'][pageid]['revisions'][0]['timestamp']
             rev_date = datetime.strptime(ret_date, "%Y-%m-%dT%H:%M:%SZ")
             return rev_date
         except Exception as err:
