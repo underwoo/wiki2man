@@ -38,7 +38,7 @@ def main():
                     args.wiki_page)
 
     if args.type == "rst":
-        output = wiki.convert2rst(args.title)
+        output = wiki.convert2rst()
         fname = f"{args.title}.rst"
     else:
         output = wiki.convert2man(args.title, args.section)
